@@ -21,10 +21,16 @@ int main (int argc, char * argv[])
 
     initRandom();
 
-    int test[10];
-    printTable(test, 10, "test avant randomise");
-    randomiseTable(test, 10, 10);
-    printTable(test, 10, "test apres randomise");
+    int test[1000];
+    printTable(test, 1000, "test avant randomise");
+    randomiseTable(test, 1000, 10);
+    printTable(test, 1000, "test apres randomise");
+
+    Seq res;
+    double v = testMethod(m1, test, 1000, &res);
+    res.print(&res);
+    printf("time : %f\n", v);
+
 
     return 0;
 }
