@@ -4,16 +4,19 @@ CFLAGS = -I$(INCLUDE)
 
 all: main
 
-main: main.o sequence.o submax.o
+main: main.o sequence.o submax.o test.o
 	gcc $^ -o $@
 
-main.o: $(SRC)/main.c $(INCLUDE)/sequence.h $(INCLUDE)/submax.h
+main.o: $(SRC)/main.c $(INCLUDE)/sequence.h $(INCLUDE)/submax.h $(INCLUDE)/test.h
 	gcc $(CFLAGS) -c $<
 
 sequence.o: $(SRC)/sequence.c $(INCLUDE)/sequence.h
 	gcc $(CFLAGS) -c $<
 
 submax.o: $(SRC)/submax.c $(INCLUDE)/submax.h $(INCLUDE)/sequence.h
+	gcc $(CFLAGS) -c $<
+
+test.o: $(SRC)/test.c $(INCLUDE)/test.h
 	gcc $(CFLAGS) -c $<
 
 clean:
