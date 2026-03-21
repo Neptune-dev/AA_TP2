@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 #include <time.h>
 #include "include/test.h"
 #include "include/sequence.h"
@@ -6,6 +8,15 @@
 void initRandom ()
 {
     srand(time(NULL));
+}
+
+void freeResults(double** resultsTable, int func)
+{
+    for (int i = 0; i < func; i++)
+    {
+        free(resultsTable[i]);
+    }
+    free(resultsTable);
 }
 
 // met les n premieres valeurs de t à un entier aléatoire entre -maxPositiveValue et +maxPositiveValue
@@ -31,3 +42,97 @@ double testMethod(Seq (*submaxMethod)(int*, int), int t[], int n, Seq *methodRes
     return ((double)(end - start)) / CLOCKS_PER_SEC;
 }
 
+// teste les methodes passées en paramètre pour des tableaux de valeurs aléatoires :
+// le nombre de fonction est donné par le paramètre func
+// la taille des tableau est croissante de 1 à maxTableSize
+// les valeurs aléatoires sont comprise entre -n et +n
+double** testRoutine (int maxTableSize, int n, int func, ...)
+{
+    initRandom();
+
+    va_list args;
+    va_start(args, func);
+
+    int* sampleTable = (int*)malloc(maxTableSize * sizeof(int));
+    if (sampleTable == NULL)
+    {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+
+    // on récupère toutes les fonctions passées en varargs
+    SubmaxMethod* functions = (SubmaxMethod*)malloc(func * sizeof(SubmaxMethod));
+    if (functions == NULL)
+    {
+        printf("Memory allocation failed\n");
+        free(sampleTable);
+        exit(1);
+    }
+    for (int i = 0; i < func; i++)
+    {
+        functions[i] = va_arg(args, SubmaxMethod);
+    }
+
+    // tableau de résultat 2D : fonction x maxTableSize
+    double** timeResults = (double**)malloc(func * sizeof(double*));
+    if (timeResults == NULL)
+    {
+        printf("Memory allocation failed\n");
+        free(functions);
+        free(sampleTable);
+        exit(1);
+    }
+
+    // 2e dimension
+    for (int i = 0; i < func; i++)
+    {
+        timeResults[i] = (double*)malloc(maxTableSize * sizeof(double));
+        if (timeResults[i] == NULL)
+        {
+            printf("Memory allocation failed\n");
+            // free des cases précédentes en cas d'erreur
+            for (int j = 0; j < i; j++) {
+                free(timeResults[j]);
+            }
+            free(functions);
+            free(timeResults);
+            free(sampleTable);
+            exit(1);
+        }
+    }
+
+    // message à l'utilisateur
+    printf("\n####################################################\n\n");
+    printf("Parametres :\n- %d fonctions testees\n- %d tableaux aleatoires utilises\n- variables comprises entre -%d et +%d\n", func, maxTableSize, n, n);
+    printf("\n####################################################\n");
+    printf("\n                 [ TESTS EN COURS ]\n");
+    printf("\n####################################################\n\n");
+    printf("...\n");
+
+    // serie de tests
+    Seq resBuffer;
+    for (int tableSize = 1; tableSize <= maxTableSize; tableSize++)
+    {
+        // msg
+        printf("\033[F\033[K");
+        printf(" >>> Test en cours pour les tableaux de taille %d\n", tableSize);
+
+        randomiseTable(sampleTable, tableSize, n);
+
+        for (int fun = 0; fun < func; fun++)
+        {
+            timeResults[fun][tableSize - 1] = testMethod(functions[fun], sampleTable, tableSize, &resBuffer);
+        }
+    }
+
+    //msg
+    printf("\nDone!\n");
+    printf("\n####################################################\n\n");
+
+    // nettoyage
+    va_end(args);
+    free(functions);
+    free(sampleTable);
+
+    return timeResults;
+}

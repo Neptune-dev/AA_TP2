@@ -20,4 +20,4 @@ test.o: $(SRC)/test.c $(INCLUDE)/test.h
 	gcc $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o main sequence submax
+	rm -f *.o main sequence submax test

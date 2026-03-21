@@ -15,22 +15,11 @@ void printTable (int *t, int n, char* label)
 
 int main (int argc, char * argv[])
 {
-    //int test[] = {1, -8, 4, -5, -5, 3, 2, -1, 3};
-    //Seq res = m2 (test, 9);
-    //res.print(&res);
+    
+    double** tbl = testRoutine (500, 10, 3, m1, m2, m3);
 
-    initRandom();
-
-    int test[1000];
-    printTable(test, 1000, "test avant randomise");
-    randomiseTable(test, 1000, 10);
-    printTable(test, 1000, "test apres randomise");
-
-    Seq res;
-    double v = testMethod(m1, test, 1000, &res);
-    res.print(&res);
-    printf("time : %f\n", v);
-
+    freeResults(tbl, 3);
 
     return 0;
+
 }
