@@ -17,4 +17,4 @@ submax.o: $(SRC)/submax.c $(INCLUDE)/submax.h $(INCLUDE)/sequence.h
 	gcc $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o main sequence
+	rm -f *.o main sequence submax
