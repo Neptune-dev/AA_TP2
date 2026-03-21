@@ -151,17 +151,33 @@ void printResults (double** results, int maxTableSize, int func)
 
 void exportResultsToCSV(double** results, int maxTableSize, int func, const char* filename)
 {
+    printf("Export des donnees...\n");
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
         printf("Erreur d'ouverture du fichier.\n");
         return;
     }
 
-    for (int i = 0; i < func; i++) {
+    // ligne n
+    fprintf(file, "n;");
+    for (int i = 0; i < maxTableSize; i++)
+    {
+        fprintf(file, "%d", i);
+
+        // Ajouter une virgule sauf pour le dernier élément de la ligne
+        if (i < maxTableSize - 1) {
+            fprintf(file, ";");
+        }
+    }
+    fprintf(file, "\n");
+
+    // data
+    for (int i = 0; i < func; i++)
+    {
+        fprintf(file, "f%d;", i);
         for (int j = 0; j < maxTableSize; j++) {
             fprintf(file, "%.2f", results[i][j]);
 
-            // Ajouter une virgule sauf pour le dernier élément de la ligne
             if (j < maxTableSize - 1) {
                 fprintf(file, ";");
             }
@@ -170,4 +186,6 @@ void exportResultsToCSV(double** results, int maxTableSize, int func, const char
     }
 
     fclose(file);
+
+    printf("Done!\n");
 }
