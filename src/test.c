@@ -136,3 +136,38 @@ double** testRoutine (int maxTableSize, int n, int func, ...)
 
     return timeResults;
 }
+
+void printResults (double** results, int maxTableSize, int func)
+{
+    for (int tableSize = 1; tableSize <= maxTableSize; tableSize++)
+    {
+        printf("\nn = %d :\n", tableSize);
+        for (int fun = 0; fun < func; fun++)
+        {
+            printf("f%d : %f\n", fun, results[fun][tableSize - 1]);
+        }
+    }
+}
+
+void exportResultsToCSV(double** results, int maxTableSize, int func, const char* filename)
+{
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Erreur d'ouverture du fichier.\n");
+        return;
+    }
+
+    for (int i = 0; i < func; i++) {
+        for (int j = 0; j < maxTableSize; j++) {
+            fprintf(file, "%.2f", results[i][j]);
+
+            // Ajouter une virgule sauf pour le dernier élément de la ligne
+            if (j < maxTableSize - 1) {
+                fprintf(file, ";");
+            }
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+}
