@@ -144,7 +144,7 @@ void printResults (double** results, int maxTableSize, int func)
         printf("\nn = %d :\n", tableSize);
         for (int fun = 0; fun < func; fun++)
         {
-            printf("f%d : %f\n", fun, results[fun][tableSize - 1]);
+            printf("f%d : %Lf\n", fun, results[fun][tableSize - 1]);
         }
     }
 }
@@ -158,27 +158,40 @@ void exportResultsToCSV(double** results, int maxTableSize, int func, const char
         return;
     }
 
-    // ligne n
+    // labels
     fprintf(file, "n;");
-    for (int i = 0; i < maxTableSize; i++)
+    for (int i = 0; i < func; i++)
     {
-        fprintf(file, "%d", i);
-
-        // Ajouter une virgule sauf pour le dernier élément de la ligne
-        if (i < maxTableSize - 1) {
-            fprintf(file, ";");
+        fprintf(file, "f%d", i);
+        if (i < func - 1)
+        {
+                fprintf(file, ";");
         }
     }
     fprintf(file, "\n");
 
     // data
-    for (int i = 0; i < func; i++)
+    char buffer[20];
+    for (int i = 0; i < maxTableSize; i++)
     {
-        fprintf(file, "f%d;", i);
-        for (int j = 0; j < maxTableSize; j++) {
-            fprintf(file, "%.2f", results[i][j]);
+        fprintf(file, "%d;", i + 1);
+        for (int j = 0; j < func; j++) {
+            snprintf(buffer, sizeof(buffer), "%.2f", results[j][i]);
 
-            if (j < maxTableSize - 1) {
+            // on remplace le pointpar une virgule
+            for (char* p = buffer; *p; p++)
+            {
+                if (*p == '.')
+                {
+                    *p = ',';
+                    break; // ya qu'une virgule par valeur
+                }
+            }
+
+            fprintf(file, "%s", buffer);
+
+            if (j < func - 1)
+            {
                 fprintf(file, ";");
             }
         }
