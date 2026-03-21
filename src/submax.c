@@ -44,6 +44,16 @@ Seq m3 (int t[], int n)
 {
     Seq a = newSequence (t, 0, n/2);
     Seq b = newSequence (t, (n/2) + 1, n);
-    //Seq c = newSequence (t, ?, ?);
+    Seq c = newSequence (t, (n/2), (n/2));
+
+    if ((a > b) && (a > c))
+    { 
+	return a;
+    } 
+    else if (b > c)
+    {
+	return b;
+    }
+    else return c; 
     
 }
