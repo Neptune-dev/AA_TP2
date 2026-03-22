@@ -5,6 +5,7 @@
 #include "include/test.h"
 #include "include/sequence.h"
 
+// initialise l'aléatoire, nécessaire pour randomiseTable eg
 void initRandom ()
 {
     srand(time(NULL));
@@ -20,6 +21,7 @@ void freeResults(double** resultsTable, int func)
 }
 
 // met les n premieres valeurs de t à un entier aléatoire entre -maxPositiveValue et +maxPositiveValue
+// à besoin d'être initialisé une unique fois avant utilisation, avec initRandom, si l'utilisateur utilise cette fonction hors de testRoutine
 void randomiseTable (int t[], int n, int maxPositiveValue)
 {
     for (int  i = 0; i < n; i++)
@@ -147,6 +149,16 @@ void printResults (double** results, int maxTableSize, int func)
             printf("f%d : %Lf\n", fun, results[fun][tableSize - 1]);
         }
     }
+}
+
+void printTable (int *t, int n, char* label)
+{
+    printf("%s : ", label);
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", t[i]);
+    }
+    printf("\n");
 }
 
 void exportResultsToCSV(double** results, int maxTableSize, int func, const char* filename)
