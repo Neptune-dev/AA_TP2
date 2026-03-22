@@ -1,11 +1,11 @@
 SRC = ./src
 INCLUDE = ./src/include
-CFLAGS = -I$(INCLUDE) -g
+CFLAGS = -I$(INCLUDE)
 
 all: main
 
 main: main.o sequence.o submax.o test.o
-	gcc -g $^ -o $@
+	gcc $^ -o $@
 
 main.o: $(SRC)/main.c $(INCLUDE)/sequence.h $(INCLUDE)/submax.h $(INCLUDE)/test.h
 	gcc $(CFLAGS) -c $<

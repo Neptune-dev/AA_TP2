@@ -5,14 +5,14 @@
 
 int main (int argc, char * argv[])
 {
-    int maxTableSize = 1000;
+    int maxTableSize = 10000;
     int var = 20;
 
-    double** tbl = testRoutine (maxTableSize, var, 3, m1, m2, m3);
+    double** tbl = testRoutine (maxTableSize, var, 2, m2, m3);
     //printResults(tbl, maxTableSize, 3);
-    exportResultsToCSV(tbl, maxTableSize, 3, "out.csv");
+    exportResultsToCSV(tbl, maxTableSize, 2, "out.csv");
 
-    freeResults(tbl, 3);
+    freeResults(tbl, 2);
 
     return 0;
 
