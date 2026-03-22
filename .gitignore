@@ -53,3 +53,7 @@ dkms.conf
 
 # export files
 *.csv
+
+# vscode
+*.vscode
+*.vs
