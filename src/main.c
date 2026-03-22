@@ -14,17 +14,6 @@ int main (int argc, char * argv[])
 
     freeResults(tbl, 2);
 
-    //int t[20];
-    //initRandom();
-    //randomiseTable(t, 20, var);
-    //Seq me2;
-    //Seq buffer;
-    //testMethod(m2, t, 20, &me2);
-    //testMethod(m3, t, 20, &buffer);
-    //printTable(t, 20, "t");
-    //me2.print(&me2);
-    //buffer.print(&buffer);
-
     return 0;
 
 }
