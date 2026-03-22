@@ -59,6 +59,7 @@ double** testRoutine (int maxTableSize, int n, int func, ...)
     if (sampleTable == NULL)
     {
         printf("Memory allocation failed\n");
+        va_end(args);
         exit(1);
     }
 
@@ -67,6 +68,7 @@ double** testRoutine (int maxTableSize, int n, int func, ...)
     if (functions == NULL)
     {
         printf("Memory allocation failed\n");
+        va_end(args);
         free(sampleTable);
         exit(1);
     }
@@ -74,6 +76,9 @@ double** testRoutine (int maxTableSize, int n, int func, ...)
     {
         functions[i] = va_arg(args, SubmaxMethod);
     }
+
+    // fin d'usage des arguments
+    va_end(args);
 
     // tableau de résultat 2D : fonction x maxTableSize
     double** timeResults = (double**)malloc(func * sizeof(double*));
@@ -132,7 +137,6 @@ double** testRoutine (int maxTableSize, int n, int func, ...)
     printf("\n####################################################\n\n");
 
     // nettoyage
-    va_end(args);
     free(functions);
     free(sampleTable);
 

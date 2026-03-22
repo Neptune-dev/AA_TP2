@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 #include "include/submax.h"
 #include "include/sequence.h"
 
@@ -42,83 +43,72 @@ Seq m2 (int t[], int n)
     return maxSequence;
 }
 
-Seq m3 (int t[], int n)
+
+// trouve la meilleure séquence qui traverse mid
+// private
+Seq maxCrossingSeq(int t[], int left, int mid, int right)
 {
-    int size = n/2;
-
-    // préparation des échantillons du tbl
-    int* t1 = (int*)malloc(size * sizeof(int));
-    if (t1 == NULL)
+    int leftSum = INT_MIN;
+    int sum = 0;
+    int maxLeft = mid;
+    for (int i = mid; i >= left; i--)
     {
-        printf("Memory allocation failed\n");
-        exit(1);
+        sum += t[i];
+        if (sum > leftSum)
+        {
+            leftSum = sum;
+            maxLeft = i;
+        }
     }
 
-    int* t2 = (int*)malloc(size * sizeof(int));
-    if (t2 == NULL)
+    int rightSum = INT_MIN;
+    sum = 0;
+    int maxRight = mid + 1;
+    for (int j = mid + 1; j <= right; j++)
     {
-        printf("Memory allocation failed\n");
-        free(t1);
-        exit(1);
+        sum += t[j];
+        if (sum > rightSum)
+        {
+            rightSum = sum;
+            maxRight = j;
+        }
     }
 
-    int* t3 = (int*)malloc(size * sizeof(int));
-    if (t3 == NULL)
+    return newSequence(t, maxLeft, maxRight);
+}
+
+// divide and conquer principal
+// private
+Seq mainDC(int t[], int left, int right)
+{
+    if (left == right)
     {
-        printf("Memory allocation failed\n");
-        free(t1);
-        free(t2);
-        exit(1);
+        return newSequence(t, left, right);
     }
 
-    // copie dans les tableaux
-    int i = 0;
-    while (i < size)
+    int mid = (left + right) / 2;
+
+    Seq leftSeq = mainDC(t, left, mid);
+    Seq rightSeq = mainDC(t, mid + 1, right);
+    Seq crossSeq = maxCrossingSeq(t, left, mid, right);
+
+    int leftSum = leftSeq.sum(&leftSeq);
+    int rightSum = rightSeq.sum(&rightSeq);
+    int crossSum = crossSeq.sum(&crossSeq);
+
+    if (leftSum >= rightSum && leftSum >= crossSum)
     {
-        t1[i] = t[i];
-        i++;
-    }
-    i++;
-
-    int j = 0;
-    while (i < n)
-    {
-        t2[j] = t[i];
-        i++;
-        j++;
-    }
-
-    i = size / 2;
-    j = 0;
-    while (i < (3 * n) / 4)
-    {
-        t3[j] = t[i];
-        i++;
-        j++;
-    }
-
-    // calcul de la séquence pour chaque échantillon
-    Seq s1 = m2(t1, size);
-    Seq s2 = m2(t2, size);
-    Seq s3 = m2(t3, size);
-
-    Seq maxSequence;
-    // comparaison
-    if ((s1.sum(&s1) > s2.sum(&s2)) && (s1.sum(&s1) > s3.sum(&s3)))
+        return leftSeq;
+    } else if (rightSum >= leftSum && rightSum >= crossSum)
     { 
-	    maxSequence = s1;
-    } 
-    else if (s2.sum(&s2) > s3.sum(&s3))
-    {
-        maxSequence = s2;
+        return rightSeq;
     } else
     {
-        maxSequence = s3;
+        return crossSeq;
     }
+}
 
-    free(t1);
-    free(t2);
-    free(t3);
-
-    return maxSequence;
+Seq m3(int t[], int n)
+{
+    return mainDC(t, 0, n - 1);
 }
