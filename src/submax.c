@@ -78,6 +78,7 @@ Seq m3 (int t[], int n)
         t1[i] = t[i];
         i++;
     }
+    i++;
 
     int j = 0;
     while (i < n)

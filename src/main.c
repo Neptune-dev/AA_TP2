@@ -6,11 +6,11 @@
 int main (int argc, char * argv[])
 {
     int maxTableSize = 1000;
-    int var = 10;
+    int var = 20;
 
     double** tbl = testRoutine (maxTableSize, var, 3, m1, m2, m3);
     //printResults(tbl, maxTableSize, 3);
-    exportResultsToCSV(tbl, maxTableSize, 3, "test.csv");
+    exportResultsToCSV(tbl, maxTableSize, 3, "out.csv");
 
     freeResults(tbl, 3);
 
